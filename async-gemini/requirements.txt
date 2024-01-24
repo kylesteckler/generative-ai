@@ -1,0 +1,7 @@
+fastapi==0.100.1
+uvicorn==0.25.0
+gcloud-aio-auth==5.1.2
+aiohttp==3.8.6
+pydantic==2.5.1
+pydantic-settings==2.1.0
+pydantic_core==2.14.3
