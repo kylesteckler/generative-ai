@@ -1,8 +1,6 @@
-from fastapi import FastAPI, Request, HTTPException
-
-from contextlib import asynccontextmanager
 import aiohttp
-
+from fastapi import FastAPI, Request, HTTPException
+from contextlib import asynccontextmanager
 
 from gemini import AsyncGemini
 from models import TextGenerationRequest, TextGenerationResponse
@@ -30,13 +28,12 @@ app = FastAPI(lifespan=lifespan)
 @app.post("/predict")
 async def predict(request: Request, generation_request: TextGenerationRequest) -> TextGenerationResponse:
     model: AsyncGemini = request.app.gemini
-
     try:
         response = await model.predict(request=generation_request)
-        logger.info("Gemini response prepared", response=response)
         return response
     except Exception as e:
-        raise HTTPException(status_code=502, detail={
-            "message": "Gemini prediction failed",
-            "error": str(e)
-        })
+        logger.error("Prediction Failed", error=str(e), request=generation_request)
+        raise HTTPException(
+            status_code=502, 
+            detail={"error": {"message": "Gemini prediction failed"}}
+        )
